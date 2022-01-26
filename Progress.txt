@@ -1,0 +1,14 @@
+407. Creating the basic express app
+===================================
+install npm packages express, mongoose & ejs
+Import express into our app and create an instance
+Setup express (our server) to listen on port 3000 for HTTP requests
+Register a HTTP request and send a response back to the requester
+Start the server (express) up
+Make a simple http get request from the route you setup to makes everything is working
+Create a views directory to facilitate our templating engine
+	Within create a dummy file called 'home.ejs' with some basic stuff
+We're going to be using a templating engine
+	Tell express what templating engine we're using
+	Import the path module and use it to then tell express where our templates (views) will be
+Call a simple template file called 'home.ejs' and render it
