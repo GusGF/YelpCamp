@@ -3,12 +3,37 @@
 install npm packages express, mongoose & ejs
 Import express into our app and create an instance
 Setup express (our server) to listen on port 3000 for HTTP requests
-Register a HTTP request and send a response back to the requester
-Start the server (express) up
-Make a simple http get request from the route you setup to makes everything is working
-Create a views directory to facilitate our templating engine
-	Within create a dummy file called 'home.ejs' with some basic stuff
-We're going to be using a templating engine
+Register a simple HTTP get request and send a simple response back to the requester
+Create a views directory to facilitate our templating engine:
+	Within create a dummy file called 'home.ejs' with some basic HTML
+We're going to be using a templating engine:
 	Tell express what templating engine we're using
 	Import the path module and use it to then tell express where our templates (views) will be
 Call a simple template file called 'home.ejs' and render it
+
+
+408. Campground Model Basics (Mongoose)
+=======================================
+Create a directory for our Mongoose models:
+	Within this directory create campground.js
+Require Mongoose
+Create a schema called 'campGroundSchema' as follows:
+  title: String,
+  price: String,
+  description: String,
+  location: String
+Based on the schema create a model and export it
+Create a mongoose instance and connect to it:
+	mongoose.connect('mongodb://localhost:27017/yelp-campDB', { 
+	  useNewUrlParser: true,
+	  useCreateIndex: true, 
+	  useUnifiedTopology: true});
+Assess whether the DB connection is good or there is an error:
+	Set a variable for the Mongoose connection
+	If there is an error report it to the console
+	If the connection is open report this success to the console
+Create a simple 'get' route for when a campground is created '/makecampground'
+	Locically it should be a 'post' route but don't worry about this for now.
+You will need to require the 'CampGround' model to work with it
+Use the 'CampGround' model to create a campground under the above route
+	Use the above route to view the object in the browser
