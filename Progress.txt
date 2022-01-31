@@ -37,3 +37,36 @@ Create a simple 'get' route for when a campground is created '/makecampground'
 You will need to require the 'CampGround' model to work with it
 Use the 'CampGround' model to create a campground under the above route
 	Use the above route to view the object in the browser
+
+
+409. Seeding Campgrounds
+========================
+We want to create a file ('index.js' below) solely to clear out then seed our database when reqd
+Use the following link to get the data files:
+	https://github.com/Colt/YelpCamp/tree/c12b6ca9576b48b579bc304f701ebb71d6f9879a/seeds
+From the above location copy files 'cities.js' & 'seedHelpers.js' to a new folder called 'seeds'
+In the seeds folder create a file called 'index.js', use this to:
+	Connect to mongoose and validate your DB connection
+	Create an async function 'seedDB()' to: 
+		Clear the campgrounds collection
+		Import cities:
+			Use a for-loop to bring the cities array in from 'cities.js'
+				Access the array randomly
+				Combine 'city' & 'state' fields and assign to 'location'
+			Run seeds/index.js using node, not nodemon
+		Now import arrays 'descriptors' & 'places' from seedHelpers.js using destructuring:
+			Create a generic function to:
+				Which will accept either array as an argument
+				Randomly select a value from each
+				Combine these values to make a 'title'
+				And you should end up with something like this in your 'campgrounds' collection:
+{ ..., "title" : "Maple Hunting Camp", "location" : "Plymouth, Minnesota", "__v" : 0 }
+{ ..., "title" : "Elk Mule Camp", "location" : "Newark, New Jersey", "__v" : 0 }
+{ ..., "title" : "Forest Bay", "location" : "Lawrence, Massachusetts", "__v" : 0 }
+{ ..., "title" : "Diamond Creek", "location" : "Shelton, Connecticut", "__v" : 0 }
+	If 'seedDB()' has created the above i.e. has run successfully then it will have returned a promise:
+		Use this to close the DB connection
+	
+	
+410. Campground Index
+=====================

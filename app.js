@@ -3,6 +3,7 @@ const app = express();
 const path = require('path');
 const mongoose = require('mongoose');
 const CampGround = require('./models/campground');
+
 mongoose.connect('mongodb://localhost:27017/yelpCampDB', {
   useNewUrlParser: true,
   useUnifiedTopology: true
