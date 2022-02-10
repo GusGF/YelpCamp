@@ -86,3 +86,16 @@ Ammend 'index.js' so that the list of campgrounds is a list of links.
 Create an ejs file for displaying this single campground called 'show.ejs'
 Implement the find within this new route using the route parameter
 Display the campground's title, location in 'show.ejs'
+
+
+412. Campground New & Create
+============================
+To create a new record (campground) we need two different routes:
+	The 'new form' route for entering data and the 'create route' for posting data i.e. a post.
+	Create 'new.ejs' for the form so users can enter 'title' and 'location' (don't worry about cosmetics)
+	Create the 'new form' route in 'app.js'
+	You may come up against a perplexing problem if 'new' form won't display. Clue is 'route order'
+	Now setup your post route in 'app.js' then simply render the your form data for now:
+		If this doesn't display? Clue: parsing
+	
+	
