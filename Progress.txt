@@ -76,5 +76,13 @@ In the seeds folder create a file called 'index.js', use this to:
 Get rid of the "app.get('/makeCampGround',..." route.
 Create an camp ground index route:
 	This should render a new file in views/campgrounds/index.ejs
-	Use a for loop in the ejs file to iterate through the camp grounds
+	Use a for loop in the ejs file to iterate through all the camp grounds as a <li>
 	
+	
+411. Campground Show
+====================
+Creat a route for displaying a campground based on the document ObjectId e.g. '/campgrounds/61f80ed...'
+Ammend 'index.js' so that the list of campgrounds is a list of links.
+Create an ejs file for displaying this single campground called 'show.ejs'
+Implement the find within this new route using the route parameter
+Display the campground's title, location in 'show.ejs'
