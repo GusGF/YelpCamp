@@ -1,5 +1,8 @@
 407. Creating the basic express app
 ===================================
+*************************************************************************************
+I AM HERE............I AM HERE.............I AM HERE............I AM HERE............
+*************************************************************************************
 install npm packages express, mongoose & ejs
 Import express into our app and create an instance
 Setup express (our server) to listen on port 3000 for HTTP requests
@@ -23,10 +26,9 @@ Create a schema called 'campGroundSchema' as follows:
   description: String,
   location: String
 Based on the schema create a model and export it
-Create a mongoose instance and connect to it:
+Connect to the mongoose DB:
 	mongoose.connect('mongodb://localhost:27017/yelp-campDB', { 
 	  useNewUrlParser: true,
-	  useCreateIndex: true, 
 	  useUnifiedTopology: true});
 Assess whether the DB connection is good or there is an error:
 	Set a variable for the Mongoose connection
@@ -37,6 +39,8 @@ Create a simple 'get' route for when a campground is created '/makecampground'
 You will need to require the 'CampGround' model to work with it
 Use the 'CampGround' model to create a campground under the above route
 	Use the above route to view the object in the browser
+	View the campground in the Node REPL i.e. view the document and collection.
+	The callback for this route will need a 'wait' to allow time to save to the Mongo DB.
 
 
 409. Seeding Campgrounds
@@ -46,27 +50,31 @@ Use the following link to get the data files:
 	https://github.com/Colt/YelpCamp/tree/c12b6ca9576b48b579bc304f701ebb71d6f9879a/seeds
 From the above location copy files 'cities.js' & 'seedHelpers.js' to a new folder called 'seeds'
 In the seeds folder create a file called 'index.js', use this to:
-	Connect to mongoose and validate your DB connection
-	Create an async function 'seedDB()' to: 
-		Clear the campgrounds collection
-		Import cities:
-			Use a for-loop to bring the cities array in from 'cities.js'
-				Access the array randomly
-				Combine 'city' & 'state' fields and assign to 'location'
-			Run seeds/index.js using node, not nodemon
-		Now import arrays 'descriptors' & 'places' from seedHelpers.js using destructuring:
-			Create a generic function to:
-				Which will accept either array as an argument
-				Randomly select a value from each
-				Combine these values to make a 'title'
-				And you should end up with something like this in your 'campgrounds' collection:
+	Connect to mongoose and validate your DB connection:
+		For the connection add an event listener to listen out for errors
+		For a 'successful DB open' event create a one time listener
+	In the 'seeds' folder create an index.js file with an async function 'seedDB()' to: 
+		Clear the campgrounds collection of all documents
+	Import from cities.js & seedHelpers.js
+	Create a function to generate a random index for whatever array is passed to it.
+	Use a for-loop to:	
+		Using above random index, bring in the cities combining city & state for the location field
+		Using above random index, combine 'descriptor' & 'place' fields for the title field
+		Run seeds/index.js using node, not nodemon
+		And you should end up with something like this in your 'campgrounds' collection:
 { ..., "title" : "Maple Hunting Camp", "location" : "Plymouth, Minnesota", "__v" : 0 }
 { ..., "title" : "Elk Mule Camp", "location" : "Newark, New Jersey", "__v" : 0 }
 { ..., "title" : "Forest Bay", "location" : "Lawrence, Massachusetts", "__v" : 0 }
 { ..., "title" : "Diamond Creek", "location" : "Shelton, Connecticut", "__v" : 0 }
 	If 'seedDB()' has created the above i.e. has run successfully then it will have returned a promise:
 		Use this to close the DB connection
+	In the Mongo console count the number of rows created.
 	
 	
 410. Campground Index
 =====================
+Get rid of the "app.get('/makeCampGround',..." route.
+Create an camp ground index route:
+	This should render a new file in views/campgrounds/index.ejs
+	Use a for loop in the ejs file to iterate through the camp grounds
+	
