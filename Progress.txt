@@ -125,3 +125,13 @@ Add a route for when a campground is to be edited:
 				Redirect to the display the result of the edit using the campground template 'show.ejs'
 	
 	
+414. Campground Delete
+======================
+Create a delete route:
+	Get the ID from the params
+	Find it and delete it
+	Redirect to the index template
+Now make the button to send that delete request:
+	In the template 'show.ejs':
+		Use a form element and a button to call the 'delete' route to action the delete
+	
