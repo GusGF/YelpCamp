@@ -92,10 +92,36 @@ Display the campground's title, location in 'show.ejs'
 ============================
 To create a new record (campground) we need two different routes:
 	The 'new form' route for entering data and the 'create route' for posting data i.e. a post.
-	Create 'new.ejs' for the form so users can enter 'title' and 'location' (don't worry about cosmetics)
+	Create 'new.ejs' for the form so users can enter 'title' and 'location' (don't worry about cosmetics):
+		Also group 'title' & 'location' in 'new.ejs' so I can use 'req.body.campground' in 'app.js'
 	Create the 'new form' route in 'app.js'
 	You may come up against a perplexing problem if 'new' form won't display. Clue is 'route order'
-	Now setup your post route in 'app.js' then simply render the your form data for now:
+	Now setup your post route in 'app.js' then simply render your form data for now:
 		If this doesn't display? Clue: parsing
+INTERMEDIATE
+============
+	Insert this new campground and save
+	Redirect back to the 'show' page to display the new campground
+	On the show page add a link for getting back to the campground index
+	
+	
+413. Campground Edit & Update
+=============================
+Add a route for when a campground is to be edited:
+	i.e. '/campgrounds/:id/edit'
+	And display the campground in a 'edit' template called 'edit.ejs'
+		This template should display the campsite obviously
+	In the show template add an edit link for the current displayed campground and test it
+		Make sure the link takes you to the edit template now displaying the campground to be edited
+	Add a button to update the campground in the 'edit' template
+	Install & setup a package which allows us to override our get/post form requests in HTML
+	Write a simple put route:
+		In the 'edit' template override the form's method
+		Write a bare bones 'put' route and output a simple console message
+		Now setup the action for the 'edit' template's form
+		In 'app.js' develop the put route:
+			Use the campgrounds ID to find and update the document
+				Try using the spread operator to assign the values
+				Redirect to the display the result of the edit using the campground template 'show.ejs'
 	
 	
