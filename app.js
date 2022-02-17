@@ -20,6 +20,11 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'))
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
+app.use((req, res, next) => {
+  req.method = 'POST';
+  console.log(req.method, req.path);
+  next();
+});
 
 app.get('/', (req, res) => {
   res.render('home');

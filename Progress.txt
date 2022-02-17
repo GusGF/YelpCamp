@@ -134,4 +134,9 @@ Create a delete route:
 Now make the button to send that delete request:
 	In the template 'show.ejs':
 		Use a form element and a button to call the 'delete' route to action the delete
-	
+
+
+417. Using Morgan - Logger Middleware
+=====================================
+Install Morgan
+Use it to output to the console
