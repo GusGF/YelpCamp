@@ -140,3 +140,12 @@ Now make the button to send that delete request:
 =====================================
 Install Morgan
 Use it to output to the console
+
+
+419. More Middleware Practice
+=============================
+Write a piece of express middleware which will:
+	Output the HTML verb and path of the get request
+	Once above is run, make it so execution continues as normal
+	Screw with things and make every request a 'GET' request
+	

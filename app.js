@@ -20,8 +20,7 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'))
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
-app.use((req, res, next) => {
-  req.method = 'POST';
+app.use('/campgrounds', (req, res, next) => {
   console.log(req.method, req.path);
   next();
 });
@@ -70,6 +69,10 @@ app.delete('/campgrounds/:id', async (req, res) => {
   const { id } = req.params;
   const campground = await CampGround.findByIdAndDelete(id);
   res.redirect('/campgrounds');
+})
+
+app.use((req, res) => {
+  res.send("404 Page does not exist.")
 })
 
 app.listen(3001, () => {
