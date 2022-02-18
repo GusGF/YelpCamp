@@ -20,9 +20,16 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'))
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
-app.use('/campgrounds', (req, res, next) => {
-  console.log(req.method, req.path);
-  next();
+
+// http://localhost:3001/campgrounds?password=pass
+app.use((req, res, next) => {
+  const { password } = req.query;
+  if (password === 'pass') {
+    console.log("Access allowed");
+    next();
+  }
+  else
+    res.send("DENIED!!")
 });
 
 app.get('/', (req, res) => {

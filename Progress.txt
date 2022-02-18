@@ -149,3 +149,13 @@ Write a piece of express middleware which will:
 	Once above is run, make it so execution continues as normal
 	Screw with things and make every request a 'GET' request
 	
+
+420. Setting up a 404 Route
+===========================
+Setup a middleware to run for a specific URL
+Use middleware to raise a 404 error
+	
+	
+421. Password Middleware Demo
+=============================
+Setup middleware which will only allow pages to be displayed when the query contains the correct password
