@@ -22,7 +22,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 
 // http://localhost:3001/campgrounds?password=pass
-app.use((req, res, next) => {
+const verify = ((req, res, next) => {
   const { password } = req.query;
   if (password === 'pass') {
     console.log("Access allowed");
@@ -37,7 +37,7 @@ app.get('/', (req, res) => {
 })
 
 // Full list
-app.get('/campgrounds', async (req, res) => {
+app.get('/campgrounds', verify, async (req, res) => {
   const campgrounds = await CampGround.find({});
   res.render('campgrounds/index', { campgrounds });
 });

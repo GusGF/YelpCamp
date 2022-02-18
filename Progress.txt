@@ -159,3 +159,8 @@ Use middleware to raise a 404 error
 421. Password Middleware Demo
 =============================
 Setup middleware which will only allow pages to be displayed when the query contains the correct password
+
+
+422. Protecting Specific Routes
+===============================
+Protect a specific route using stragetically placed middleware
