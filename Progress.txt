@@ -172,4 +172,11 @@ This is similar to how template literals work
 Install node package ejs-mate
 Tell express that we are using an engine for EJS
 In your 'views' folder define a new folder called 'layouts'
-In layouts create a boilerplate file
+In layouts create a boilerplate file so only the content of the body is unique
+Apply to edit, new, show, index, campground
+
+
+424. Bootstrap 5, Boilerplate
+=============================
+Implement Bootstrap 5 to the EJS boilerplate i.e. CSS & JS bundle
+In the boilerplate put a 'main' container around the body and use a BS class 'container'
