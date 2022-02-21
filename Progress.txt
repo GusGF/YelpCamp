@@ -180,3 +180,22 @@ Apply to edit, new, show, index, campground
 =============================
 Implement Bootstrap 5 to the EJS boilerplate i.e. CSS & JS bundle
 In the boilerplate put a 'main' container around the body and use a BS class 'container'
+
+
+425. Navbar Partial
+===================
+For the boilerplate:
+	Reference Resource Data: Implement the navbar:
+		Make the navbar dark
+		Make it sticky
+		Update the brand to 'Yelp Camp'
+		Get rid of aria-current="page" & active class for 'Home' and use '/' as link
+		Change 'Features' to 'Campgrounds' incl link
+		Likewise 'Pricing' to 'New Campground'
+		Remove 'Disabled' link completely
+	Apply a margin top of 5 to the container
+	Okay so for 'boilerplate.ejs' we want to move the navbar element out:
+		To make the 'boilerplate' cleaner looking use partials
+		Create a 'partials' folder in 'views' and implement
+	
+	

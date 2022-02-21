@@ -24,6 +24,7 @@ app.use(methodOverride('_method'));
 app.engine('ejs', ejsMate);
 
 // http://localhost:3001/campgrounds?password=pass
+// Middleware to check if a password exists in the HTML request
 const verify = ((req, res, next) => {
   const { password } = req.query;
   if (password === 'pass') {
@@ -39,7 +40,7 @@ app.get('/', (req, res) => {
 })
 
 // Full list
-app.get('/campgrounds', verify, async (req, res) => {
+app.get('/campgrounds', async (req, res) => {
   const campgrounds = await CampGround.find({});
   res.render('campgrounds/index', { campgrounds });
 });
