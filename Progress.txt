@@ -178,6 +178,7 @@ Apply to edit, new, show, index, campground
 
 424. Bootstrap 5, Boilerplate
 =============================
+We'll be using Bootstrap from here on in
 Implement Bootstrap 5 to the EJS boilerplate i.e. CSS & JS bundle
 In the boilerplate put a 'main' container around the body and use a BS class 'container'
 
@@ -199,3 +200,14 @@ For the boilerplate:
 		Create a 'partials' folder in 'views' and implement
 	
 	
+426. Navbar Footer
+==================
+Create partial called 'footer.ejs':
+	Assign the following class="footer bg-dark">
+	Surround <span>Yelp Camp 2022</span> with a div of class container
+	Increase the footer vertical padding to 3
+	Add the class 'text-muted'
+	Prefix the copyright symbol to the text
+Lets use flexbox so the footer is at the bottom of a min height page:
+	Use flexbox for the body
+	Move the footer to the bottom of the page @2:33
