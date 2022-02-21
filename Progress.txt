@@ -163,4 +163,13 @@ Setup middleware which will only allow pages to be displayed when the query cont
 
 422. Protecting Specific Routes
 ===============================
-Protect a specific route using stragetically placed middleware
+Protect a specific route using stragetically placed middleware you create
+
+
+423. A New EJS Tool For Layouts (Injecting layouts)
+===================================================
+This is similar to how template literals work
+Install node package ejs-mate
+Tell express that we are using an engine for EJS
+In your 'views' folder define a new folder called 'layouts'
+In layouts create a boilerplate file

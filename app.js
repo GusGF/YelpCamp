@@ -4,6 +4,7 @@ const path = require('path');
 const mongoose = require('mongoose');
 const CampGround = require('./models/campground');
 const methodOverride = require('method-override');
+const ejsMate = require('ejs-mate');
 
 mongoose.connect('mongodb://localhost:27017/yelpCampDB', {
   useNewUrlParser: true,
@@ -20,6 +21,7 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'))
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
+app.engine('ejs', ejsMate);
 
 // http://localhost:3001/campgrounds?password=pass
 const verify = ((req, res, next) => {
