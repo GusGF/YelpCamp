@@ -238,7 +238,16 @@ Replace the UL/LI elements and use a bootstrap card:
 				Use the card-body class to encapsulate card classes for:
 					title, description and location
 						location text should be small & muted
+					Add a button which links to the campground
 					
 				
-					
-					
+429. Styling The New Form
+=========================
+Use a bootstrap row:
+	Centre a H1 called 'New Campground'
+	Put the existing form within a div, 6 wide with an offset of 3
+	The form fields should use BS classes 'form-label', 'form-control'
+	Give the 'title' & 'location' fields a margin bottom of 3
+	Add a field with label for the 'Image URL' under above fields
+	Below the image url field add a price field and use a BS input group
+		With the label above, field underneath, dollar sign to the left and placeholder of 0.00
