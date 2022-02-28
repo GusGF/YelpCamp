@@ -223,3 +223,22 @@ Let's seed the DB with images from 'Unsplash.com':
 			Hopefully everytime you call above link you will get a different image
 	Now reseed the DB
 Let's now ammend 'show.ejs' to show the image and description under location
+
+
+428. Styling Campgrounds Index
+==============================
+Take a look here for Bootstrap viewport widths (pixels) xs, sm, md, lg, xl:
+	https://getbootstrap.com/docs/4.0/layout/grid/
+Replace the UL/LI elements and use a bootstrap card:
+	Use BS card class giving it a margin of 3
+		Use the row class
+			Use the column class so that anything above sml should be 25%
+				This is where your image goes
+			Use another column class for your text using the remainding 75%
+				Use the card-body class to encapsulate card classes for:
+					title, description and location
+						location text should be small & muted
+					
+				
+					
+					
