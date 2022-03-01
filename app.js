@@ -50,7 +50,7 @@ app.get('/campgrounds/new', (req, res) => {
   res.render('campgrounds/new');
 })
 
-// Adding a campground
+// Add a campground
 app.post('/campgrounds', async (req, res) => {
   const campground = new CampGround(req.body.campground);
   await campground.save();
@@ -69,6 +69,7 @@ app.get('/campgrounds/:id/edit', async (req, res) => {
   res.render('campgrounds/edit', { campGround });
 })
 
+// Update campground
 app.put('/campgrounds/:id', async (req, res) => {
   const { id } = req.params;
   const campground = await CampGround.findByIdAndUpdate(id, { ...req.body.campground });
