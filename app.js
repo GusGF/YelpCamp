@@ -36,9 +36,10 @@ const verify = ((req, res, next) => {
   else
     // res.send("DENIED!!")
     throw new Error('Passord required!');
+  // throw new AppError('Hey ol boy! Password required', 401);
 });
 
-app.get('/', verify, (req, res) => {
+app.get('/', (req, res) => {
   res.render('home');
 })
 
@@ -89,6 +90,8 @@ app.delete('/campgrounds/:id', async (req, res) => {
 // Why does this not raise the default error handling
 app.get('/error', (req, res) => {
   chicken.fly();
+  // throw new Error('Passord required!');
+  // throw new AppError();
 })
 
 // Default error handling only when a matching route can't be found
@@ -101,6 +104,10 @@ app.use((req, res) => {
 //   console.log('*************** ERROR ********************');
 //   console.log('*******************************************');
 //   next(err);
+// })
+
+// app.use((err, req, res, next) => {
+//   next(err + "  @@@@................ I am a custom error handler............@@@@");
 // })
 
 app.listen(3001, () => {
