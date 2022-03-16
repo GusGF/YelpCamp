@@ -22,6 +22,7 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'))
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
+// Allows
 app.engine('ejs', ejsMate);
 
 // http://localhost:3001/campgrounds?password=pass
@@ -44,7 +45,7 @@ app.get('/', (req, res) => {
 })
 
 // Full list
-app.get('/campgrounds', verify, async (req, res) => {
+app.get('/campgrounds', async (req, res) => {
   const campgrounds = await CampGround.find({});
   res.render('campgrounds/index', { campgrounds });
 });
