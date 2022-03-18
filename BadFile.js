@@ -50,7 +50,6 @@ app.get('/campgrounds', async (req, res) => {
   res.render('campgrounds/index', { campgrounds });
 });
 
-
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //                            CONFUSION OVER ROUTES
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -63,10 +62,10 @@ app.get('/campgrounds/new', (req, res) => {
   res.render('campgrounds/new');
 })
 
-// Add a campground from the input form
-app.post('/campgrounds', async (req, res, next) => {
+// Add campground
+app.post('/campgrounds', async (req, res) => {
+  const campground = new CampGround(req.body.campground);
   try {
-    const campground = new CampGround(req.body.campground);
     await campground.save();
     res.redirect(`/campgrounds/${campground._id}`);
   } catch (e) {
@@ -77,62 +76,47 @@ app.post('/campgrounds', async (req, res, next) => {
 // Display a campground
 app.get('/campgrounds/:id', async (req, res, next) => {
   console.log("*************************** Display a campground *********************")
-  try {
-    const campGround = await CampGround.findById(req.params.id)
-    if (!campGround) {
-      // next(new AppError("Nothing found", 401));
-      throw new AppError("Nothing found", 401);
-    }
-    res.render('campgrounds/show', { campGround });
-  } catch (e) {
-    next(e);
-  }
-})
-// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-// Display a campground to edit
-app.get('/campgrounds/:id/edit', async (req, res, next) => {
   const campGround = await CampGround.findById(req.params.id)
   if (!campGround) {
+    // next(new AppError("Nothing found", 401));
     return next(new AppError("Nothing found", 401));
   }
-  res.render('campgrounds/edit', { campGround });
-})
+  res.render('campgrounds/show', { campGround });
 
-// Update campground
-app.put('/campgrounds/:id', async (req, res, next) => {
-  const { id } = req.params;
-  try {
-    const campground = await CampGround.findByIdAndUpdate(id, { ...req.body.campground });
-    res.redirect(`/campgrounds/${campground._id}`)
-  } catch (e) {
-    next(e);
-  }
-})
+  +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-// Guaranteed to cause an error
-app.get('/error', (req, res) => {
-  console.log("*************************** Error *********************")
-  chicken.fly();
-})
+      isplay a campground to edit
+  p.get('/campgrounds/:id/edit', async (req, res, next) => {
+    const campGround = await CampGround.findById(req.params.id)
+    if (!campGround) {
+      return next(new AppError("Nothing found", 401));
+    }
+    res.render('campgrounds/edit', { campGround });
+  })
+    
+     Guaranteed to cause an error
+  get('/error', (req, res) => {
+    console.log("*************************** Error *********************")
+    chicken.fly();
+      
+    
+     When a matching route can't be found
+    app.use((req, res) => {
+      res.status(404).send('404 Page does not exist.');
+    })
+    
+     Custom error handling
+    app.use((err, req, res, next) => {
+      console.log("In custom error.........................");
+      const { message = 'Something went wrong', status = 501 } = err;
+      res.status(status).send(message);
+      // next(err);
 
-// When a matching route can't be found
-app.use((req, res) => {
-  res.status(404).send('404 Page does not exist.');
-})
 
-// Custom error handling
-app.use((err, req, res, next) => {
-  console.log("In custom error.........................");
-  const { message = 'Something went wrong', status = 501 } = err;
-  res.status(status).send(message);
-  // next(err);
-})
-
-app.listen(3001, () => {
-  console.log('Serving on port 3001')
-});
+      app.listen(3001, () => {
+        console.log('Serving on port 3001')
+      });
 
 
 
