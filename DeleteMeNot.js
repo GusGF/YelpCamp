@@ -125,6 +125,16 @@ app.use((req, res) => {
   res.status(404).send('404 Page does not exist.');
 })
 
+
+// Our error handling middleware below
+app.use((err, req, res, next) => {
+  console.log(err.name);
+  if (err.name === 'ValidationError') {
+    throw new AppError(`Validation Failed....${err.message}`, 400);
+  }
+  next(err);
+})
+
 // Custom error handling
 app.use((err, req, res, next) => {
   console.log("In custom error.........................");
