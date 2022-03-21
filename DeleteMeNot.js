@@ -64,7 +64,7 @@ app.get('/campgrounds/new', (req, res) => {
 })
 
 // Add a campground from the input form
-app.post('/campgrounds', async (req, res, next) => {
+app.post('/campgrounds', wrapAsync(async (req, res, next) => {
   try {
     const campground = new CampGround(req.body.campground);
     await campground.save();
@@ -72,36 +72,39 @@ app.post('/campgrounds', async (req, res, next) => {
   } catch (e) {
     next(e);
   }
-})
+}))
+
+function wrapAsync(fn) {
+  return function (req, res, next) {
+    fn(req, res, next).catch(e => next(e))
+  }
+}
 
 // Display a campground
-app.get('/campgrounds/:id', async (req, res, next) => {
+app.get('/campgrounds/:id', wrapAsync(async (req, res, next) => {
   console.log("*************************** Display a campground *********************")
-  try {
-    const campGround = await CampGround.findById(req.params.id)
-    if (!campGround) {
-      // next(new AppError("Nothing found", 401));
-      throw new AppError("Nothing found", 401);
-    }
-    res.render('campgrounds/show', { campGround });
-  } catch (e) {
-    next(e);
+  const campGround = await CampGround.findById(req.params.id)
+  if (!campGround) {
+    console.log("*************************** Campground not found *********************")
+    throw new AppError("Nothing found", 401);
   }
-})
+  console.log("*************************** Now showing Campground *********************")
+  res.render('campgrounds/show', { campGround });
+}))
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 // Display a campground to edit
-app.get('/campgrounds/:id/edit', async (req, res, next) => {
+app.get('/campgrounds/:id/edit', wrapAsync(async (req, res, next) => {
   const campGround = await CampGround.findById(req.params.id)
   if (!campGround) {
     return next(new AppError("Nothing found", 401));
   }
   res.render('campgrounds/edit', { campGround });
-})
+}))
 
 // Update campground
-app.put('/campgrounds/:id', async (req, res, next) => {
+app.put('/campgrounds/:id', wrapAsync(async (req, res, next) => {
   const { id } = req.params;
   try {
     const campground = await CampGround.findByIdAndUpdate(id, { ...req.body.campground });
@@ -109,7 +112,7 @@ app.put('/campgrounds/:id', async (req, res, next) => {
   } catch (e) {
     next(e);
   }
-})
+}))
 
 // Guaranteed to cause an error
 app.get('/error', (req, res) => {
