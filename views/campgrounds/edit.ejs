@@ -2,25 +2,30 @@
   <div class="row">
     <h1 class="text-center">Edit Campground</h1>
     <div class="col-6 offset-3">
-      <form action="/campgrounds/<%=campGround._id%>?_method=PUT" method="post">
+      <form action="/campgrounds/<%=campGround._id%>?_method=PUT" method="post" novalidate class="validated-form">
         <div class="mb-3">
           <label class="form-label" for="title">Title</label>
-          <input class="form-control" type="text" id="title" value="<%= campGround.title %>" name="campground[title]">
+          <input class="form-control" type="text" id="title" value="<%= campGround.title %>" name="campground[title]"
+            required>
+          <div class="valid-feedback">Looks great!!</div>
         </div>
         <div class="mb-3">
           <label class="form-label" for="location">Location</label>
-          <input class="form-control" type="text" id="location" value="<%= campGround.location %>">
+          <input class="form-control" type="text" id="location" value="<%= campGround.location %>" required>
+          <div class="valid-feedback">Looks great!!</div>
         </div>
         <div class="mb-3">
           <label class="form-label" for="image">Image URL</label>
-          <input class="form-control" type="text" id="location" value="<%= campGround.image %>">
+          <input class="form-control" type="text" id="location" value="<%= campGround.image %>" required>
+          <div class="valid-feedback">Looks great!!</div>
         </div>
 
         <label for="price" class="form-label">Price</label>
         <div class="input-group mb-3">
           <span class="input-group-text" id="basic-addon3">$</span>
           <input type="text" class="form-control" placeholder="0.00" id="price" aria-describedby="basic-addon3"
-            value="<%= campGround.price %>">
+            value="<%= campGround.price %>" required>
+          <div class="valid-feedback">Looks great!!</div>
         </div>
 
         <div class="mb-3">
