@@ -56,10 +56,14 @@ app.get('/campgrounds/new', (req, res) => {
 })
 
 // Add a campground
-app.post('/campgrounds', async (req, res) => {
-  const campground = new CampGround(req.body.campground);
-  await campground.save();
-  res.redirect(`/campgrounds/${campground._id}`);
+app.post('/campgrounds', async (req, res, next) => {
+  try {
+    const campground = new CampGround(req.body.campground);
+    await campground.save();
+    res.redirect(`/campgrounds/${campground._id}`);
+  } catch (e) {
+    next(e)
+  }
 })
 
 // Display a campground
@@ -77,6 +81,8 @@ app.get('/campgrounds/:id/edit', async (req, res) => {
 // Update campground
 app.put('/campgrounds/:id', async (req, res) => {
   const { id } = req.params;
+  console.log(`Updating a row for: ${id}`);
+  console.log(req.body);
   const campground = await CampGround.findByIdAndUpdate(id, { ...req.body.campground });
   res.redirect(`/campgrounds/${campground._id}`)
 })
@@ -100,16 +106,13 @@ app.use((req, res) => {
   res.status(404).send('404 Page does not exist.');
 })
 
-// app.use((err, req, res, next) => {
-//   console.log('*******************************************');
-//   console.log('*************** ERROR ********************');
-//   console.log('*******************************************');
-//   next(err);
-// })
+app.use((err, req, res, next) => {
+  console.log('*******************************************');
+  console.log('*************** ERROR ********************');
+  console.log('*******************************************');
+  res.send("Oops not good");
+})
 
-// app.use((err, req, res, next) => {
-//   next(err + "  @@@@................ I am a custom error handler............@@@@");
-// })
 
 app.listen(3001, () => {
   console.log('Serving on port 3001')
