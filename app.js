@@ -6,6 +6,7 @@ const CampGround = require('./models/campground');
 const methodOverride = require('method-override');
 const ejsMate = require('ejs-mate');
 const AppError = require('./other/AppError');
+const catchAsync = require('./utils/catchAsync');
 
 mongoose.connect('mongodb://localhost:27017/yelpCampDB', {
   useNewUrlParser: true,
@@ -56,55 +57,48 @@ app.get('/campgrounds/new', (req, res) => {
 })
 
 // Add a campground
-app.post('/campgrounds', async (req, res, next) => {
+app.post('/campgrounds', catchAsync(async (req, res, next) => {
+  const campground = new CampGround(req.body.campground);
+  await campground.save();
+  res.redirect(`/campgrounds/${campground._id}`);
+}))
+
+// // Display a campground
+// app.get('/campgrounds/:id', catchAsync(async (req, res) => {
+//   const campGround = await CampGround.findById(req.params.id)
+//   res.render('campgrounds/show', { campGround });
+// }))
+
+// Display a campground
+app.get('/campgrounds/:id', async (req, res, next) => {
   try {
-    const campground = new CampGround(req.body.campground);
-    await campground.save();
-    res.redirect(`/campgrounds/${campground._id}`);
+    const campGround = await CampGround.findById(req.params.id)
+    res.render('campgrounds/show', { campGround });
   } catch (e) {
-    next(e)
+    next();
   }
 })
 
-// Display a campground
-app.get('/campgrounds/:id', async (req, res) => {
-  const campGround = await CampGround.findById(req.params.id)
-  res.render('campgrounds/show', { campGround });
-})
-
 // Display a campground to edit
-app.get('/campgrounds/:id/edit', async (req, res) => {
+app.get('/campgrounds/:id/edit', catchAsync(async (req, res) => {
   const campGround = await CampGround.findById(req.params.id)
   res.render('campgrounds/edit', { campGround });
-})
+}))
 
 // Update campground
-app.put('/campgrounds/:id', async (req, res) => {
+app.put('/campgrounds/:id', catchAsync(async (req, res) => {
   const { id } = req.params;
   console.log(`Updating a row for: ${id}`);
   console.log(req.body);
   const campground = await CampGround.findByIdAndUpdate(id, { ...req.body.campground });
   res.redirect(`/campgrounds/${campground._id}`)
-})
+}))
 
-app.delete('/campgrounds/:id', async (req, res) => {
+app.delete('/campgrounds/:id', catchAsync(async (req, res) => {
   const { id } = req.params;
   const campground = await CampGround.findByIdAndDelete(id);
   res.redirect('/campgrounds');
-})
-
-// Guaranteed to cause an error
-// Why does this not raise the default error handling
-app.get('/error', (req, res) => {
-  chicken.fly();
-  // throw new Error('Passord required!');
-  // throw new AppError();
-})
-
-// Default error handling only when a matching route can't be found
-app.use((req, res) => {
-  res.status(404).send('404 Page does not exist.');
-})
+}));
 
 app.use((err, req, res, next) => {
   console.log('*******************************************');
@@ -112,7 +106,6 @@ app.use((err, req, res, next) => {
   console.log('*******************************************');
   res.send("Oops not good");
 })
-
 
 app.listen(3001, () => {
   console.log('Serving on port 3001')
