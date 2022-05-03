@@ -9,6 +9,7 @@ const AppError = require('./other/AppError');
 const catchAsync = require('./utils/catchAsync');
 const ExpressError = require('./utils/ExpressError');
 const Joi = require('joi');
+const campgroundSchema = require('./schemas');
 
 mongoose.connect('mongodb://localhost:27017/yelpCampDB', {
   useNewUrlParser: true,
@@ -59,18 +60,7 @@ app.get('/campgrounds/new', (req, res) => {
 })
 
 const validateCampground = (req, res, next) => {
-  // Validate our data before we even attempt to save it with or involve Mongoose
-  // Here we are defining the type i.e. campground is indeed an 'object' and it should be there i.e. required
-  // Our JOI schema should match our Mongoose schema for the fields we want to check
-  const campgroundSchema = Joi.object({
-    campground: Joi.object({
-      title: Joi.string().required(),
-      price: Joi.number().required().min(0),
-      image: Joi.string().required(),
-      location: Joi.string().required(),
-      description: Joi.string().required()
-    }).required()
-  });
+
   // const result = campgroundSchema.validate(req.body);
   const { error } = campgroundSchema.validate(req.body);
   if (error) {
