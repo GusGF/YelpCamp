@@ -58,9 +58,7 @@ app.get('/campgrounds/new', (req, res) => {
   res.render('campgrounds/new');
 })
 
-// Add a campground
-app.post('/campgrounds', catchAsync(async (req, res, next) => {
-  // if (!req.body.campground) throw new ExpressError('Invalid Campground Data', 400);
+const validateCampground = (req, res, next) => {
   // Validate our data before we even attempt to save it with or involve Mongoose
   // Here we are defining the type i.e. campground is indeed an 'object' and it should be there i.e. required
   // Our JOI schema should match our Mongoose schema for the fields we want to check
@@ -78,8 +76,18 @@ app.post('/campgrounds', catchAsync(async (req, res, next) => {
   if (error) {
     const msg = error.details.map(elm => elm.message).join(', ');
     throw new ExpressError(msg, 400);
+  } else {
+    next();
   }
-  console.log(result);
+}
+
+/////////////////////////////////////////////////
+// NOW FOLLOWS ALL THE HANDLERS FOR OUR ROUTES //
+/////////////////////////////////////////////////
+// Add a campground
+app.post('/campgrounds', validateCampground, catchAsync(async (req, res, next) => {
+  // if (!req.body.campground) throw new ExpressError('Invalid Campground Data', 400);
+  // We're using middleware to validate our data before we even attempt to save it with or involve Mongoose
   const campground = new CG_Yelpcamp(req.body.campground);
   await campground.save();
   res.redirect(`/campgrounds/${campground._id}`);
@@ -98,7 +106,7 @@ app.get('/campgrounds/:id/edit', catchAsync(async (req, res) => {
 }))
 
 // Update campground
-app.put('/campgrounds/:id', catchAsync(async (req, res) => {
+app.put('/campgrounds/:id', validateCampground, catchAsync(async (req, res) => {
   const { id } = req.params;
   console.log(`Updating a row for: ${id}`);
   console.log(req.body);
