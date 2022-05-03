@@ -2,12 +2,13 @@ const express = require('express');
 const app = express();
 const path = require('path');
 const mongoose = require('mongoose');
-const CampGround = require('./models/campground');
+const CG_Yelpcamp = require('./models/campground');
 const methodOverride = require('method-override');
 const ejsMate = require('ejs-mate');
 const AppError = require('./other/AppError');
 const catchAsync = require('./utils/catchAsync');
 const ExpressError = require('./utils/ExpressError');
+const Joi = require('joi');
 
 mongoose.connect('mongodb://localhost:27017/yelpCampDB', {
   useNewUrlParser: true,
@@ -21,10 +22,10 @@ db.once('open', () => {
 });
 
 app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'))
+app.set('views', path.join(__dirname, 'views'));
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
-// Allows
+// Allows layouts to be used
 app.engine('ejs', ejsMate);
 
 // http://localhost:3001/campgrounds?password=pass
@@ -48,7 +49,7 @@ app.get('/', (req, res) => {
 
 // Full list
 app.get('/campgrounds', async (req, res) => {
-  const campgrounds = await CampGround.find({});
+  const campgrounds = await CG_Yelpcamp.find({});
   res.render('campgrounds/index', { campgrounds });
 });
 
@@ -59,21 +60,40 @@ app.get('/campgrounds/new', (req, res) => {
 
 // Add a campground
 app.post('/campgrounds', catchAsync(async (req, res, next) => {
-  if (!req.body.campground) throw new ExpressError('Invalid Campground Data', 400);
-  const campground = new CampGround(req.body.campground);
+  // if (!req.body.campground) throw new ExpressError('Invalid Campground Data', 400);
+  // Validate our data before we even attempt to save it with or involve Mongoose
+  // Here we are defining the type i.e. campground is indeed an 'object' and it should be there i.e. required
+  // Our JOI schema should match our Mongoose schema for the fields we want to check
+  const campgroundSchema = Joi.object({
+    campground: Joi.object({
+      title: Joi.string().required(),
+      price: Joi.number().required().min(0),
+      image: Joi.string().required(),
+      location: Joi.string().required(),
+      description: Joi.string().required()
+    }).required()
+  });
+  // const result = campgroundSchema.validate(req.body);
+  const { error } = campgroundSchema.validate(req.body);
+  if (error) {
+    const msg = error.details.map(elm => elm.message).join(', ');
+    throw new ExpressError(msg, 400);
+  }
+  console.log(result);
+  const campground = new CG_Yelpcamp(req.body.campground);
   await campground.save();
   res.redirect(`/campgrounds/${campground._id}`);
 }))
 
 // Display a campground
 app.get('/campgrounds/:id', catchAsync(async (req, res) => {
-  const campGround = await CampGround.findById(req.params.id)
+  const campGround = await CG_Yelpcamp.findById(req.params.id)
   res.render('campgrounds/show', { campGround });
 }))
 
 // Display a campground to edit
 app.get('/campgrounds/:id/edit', catchAsync(async (req, res) => {
-  const campGround = await CampGround.findById(req.params.id)
+  const campGround = await CG_Yelpcamp.findById(req.params.id)
   res.render('campgrounds/edit', { campGround });
 }))
 
@@ -82,13 +102,13 @@ app.put('/campgrounds/:id', catchAsync(async (req, res) => {
   const { id } = req.params;
   console.log(`Updating a row for: ${id}`);
   console.log(req.body);
-  const campground = await CampGround.findByIdAndUpdate(id, { ...req.body.campground });
+  const campground = await CG_Yelpcamp.findByIdAndUpdate(id, { ...req.body.campground });
   res.redirect(`/campgrounds/${campground._id}`)
 }))
 
 app.delete('/campgrounds/:id', catchAsync(async (req, res) => {
   const { id } = req.params;
-  const campground = await CampGround.findByIdAndDelete(id);
+  const campground = await CG_Yelpcamp.findByIdAndDelete(id);
   res.redirect('/campgrounds');
 }));
 

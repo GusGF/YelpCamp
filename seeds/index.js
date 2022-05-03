@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const CampGround = require('../models/campground');
+const CG_Yelpcamp = require('../models/campground');
 const cities = require('./cities');
 const { places, descriptors } = require('./seedHelpers');
 
@@ -17,11 +17,11 @@ db.once('open', () => {
 const sample = (array) => array[Math.floor(Math.random() * array.length)];
 
 const seedDB = async () => {
-  await CampGround.deleteMany({});
-  for (let i = 0; i < 5; i++) {
+  await CG_Yelpcamp.deleteMany({});
+  for (let i = 0; i <= 1; i++) {
     const random1000 = Math.floor(Math.random() * 1000);
     const price = Math.floor(Math.random() * 100);
-    const camp = new CampGround({
+    const camp = new CG_Yelpcamp({
       location: `${cities[random1000].city}, ${cities[random1000].state}`,
       title: `${sample(descriptors)} ${sample(places)}`,
       image: 'https://source.unsplash.com/collection/483251',
@@ -33,7 +33,7 @@ const seedDB = async () => {
 }
 
 seedDB().then(() => {
-  mongoose.connection.close();
+  const dbConn = mongoose.createConnection('mongodb://localhost:27017/yelpCampDB');
+  dbConn.close();
+  console.log("DB connection closed");
 });
-
-

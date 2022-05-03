@@ -20,9 +20,11 @@
         </ul>
         <div class="card-body">
           <a class="card-link btn btn-warning" href="/campgrounds/<%=campGround._id%>/edit">Edit</a>
+
           <form class="d-inline" action="/campgrounds/<%=campGround._id%>?_method=DELETE" method="POST">
             <button class="btn btn-danger">Delete</button>
           </form>
+
         </div>
       </div>
     </div>
