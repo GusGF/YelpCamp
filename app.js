@@ -59,9 +59,8 @@ app.get('/campgrounds/new', (req, res) => {
   res.render('campgrounds/new');
 })
 
+// This uses the JOI validation schema in 'schemas' to make sure our body 
 const validateCampground = (req, res, next) => {
-
-  // const result = campgroundSchema.validate(req.body);
   const { error } = campgroundSchema.validate(req.body);
   if (error) {
     const msg = error.details.map(elm => elm.message).join(', ');
