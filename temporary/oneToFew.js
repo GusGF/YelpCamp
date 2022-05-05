@@ -30,7 +30,7 @@ const userSchema = new mongoose.Schema({
 // Create a model
 const User = mongoose.model('User', userSchema);
 
-// Function to make a user
+// Function to make a user, then add an address
 const makeUser = async () => {
   // Create a user
   const u = new User({
@@ -48,6 +48,7 @@ const makeUser = async () => {
   console.log(res)
 }
 
+// Function just to add addresses
 const addAddresses = async (id) => {
   const user = await User.findById(id);
   user.addresses.push({
@@ -60,5 +61,6 @@ const addAddresses = async (id) => {
   console.log(res)
 }
 
+
 // makeUser();
-addAddresses('6272b4f694505a395840d51c')
+addAddresses('6272b4f694505a395840d51c');
