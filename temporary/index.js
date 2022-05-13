@@ -74,7 +74,6 @@ app.post('/farms/:id/products', async (req, res) => {
   await farm.save();
   await product.save();
   res.redirect(`/farms/${id}`)
-
 })
 
 
