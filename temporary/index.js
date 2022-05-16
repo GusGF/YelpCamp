@@ -51,19 +51,21 @@ app.delete('/farms/:id', async (req, res) => {
 
 
 
-
+// Add a farm
 app.post('/farms', async (req, res) => {
   const farm = new Farm(req.body);
   await farm.save();
   res.redirect('/farms')
 })
 
+// Form for adding a product
 app.get('/farms/:id/products/new', async (req, res) => {
   const { id } = req.params;
   const farm = await Farm.findById(id);
   res.render('products/new', { categories, farm })
 })
 
+// Associate & save the new product 
 app.post('/farms/:id/products', async (req, res) => {
   const { id } = req.params;
   const farm = await Farm.findById(id);
@@ -79,7 +81,7 @@ app.post('/farms/:id/products', async (req, res) => {
 
 
 // PRODUCT ROUTES
-
+// List products
 app.get('/products', async (req, res) => {
   const { category } = req.query;
   if (category) {
@@ -91,6 +93,7 @@ app.get('/products', async (req, res) => {
   }
 })
 
+// Form to adding products
 app.get('/products/new', (req, res) => {
   res.render('products/new', { categories })
 })
@@ -101,6 +104,7 @@ app.post('/products', async (req, res) => {
   res.redirect(`/products/${newProduct._id}`)
 })
 
+// Display the product
 app.get('/products/:id', async (req, res) => {
   const { id } = req.params;
   const product = await Product.findById(id).populate('farm', 'name');
