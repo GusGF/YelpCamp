@@ -6,6 +6,12 @@ const campGroundSchema = new Schema({
   image: { type: String, required: true },
   price: { type: Number, required: true },
   description: String,
-  location: String
+  location: String,
+  reviews: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Review'
+    }
+  ]
 });
 module.exports = mongoose.model('CG_Yelpcamp', campGroundSchema);
