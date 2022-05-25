@@ -10,6 +10,7 @@ const catchAsync = require('./utils/catchAsync');
 const ExpressError = require('./utils/ExpressError');
 const Joi = require('joi');
 const campgroundSchema = require('./schemas');
+const Review = require('./models/review');
 
 mongoose.connect('mongodb://localhost:27017/yelpCampDB', {
   useNewUrlParser: true,
@@ -109,6 +110,15 @@ app.delete('/campgrounds/:id', catchAsync(async (req, res) => {
   const campground = await CG_Yelpcamp.findByIdAndDelete(id);
   res.redirect('/campgrounds');
 }));
+
+app.post('/campgrounds/:id/reviews', catchAsync(async (req, res) => {
+  const campground = await CG_Yelpcamp.findById(req.params.id);
+  const review = new Review(req.body.review);
+  campground.reviews.push(review);
+  await review.save();
+  await campground.save();
+  res.redirect(`/campgrounds/${campground._id}`)
+}))
 
 // Will only run if nothing else above matches
 // the * represents a 'get', a 'post', etc. 
