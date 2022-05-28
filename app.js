@@ -96,8 +96,8 @@ app.post('/campgrounds', validateCampground, catchAsync(async (req, res, next) =
 
 // Display a campground
 app.get('/campgrounds/:id', catchAsync(async (req, res) => {
-  const campGround = await CG_Yelpcamp.findById(req.params.id)
-  // console.log(campGround);
+  const campGround = await CG_Yelpcamp.findById(req.params.id).populate('reviews');
+  console.log(campGround);
   res.render('campgrounds/show', { campGround });
 }))
 
