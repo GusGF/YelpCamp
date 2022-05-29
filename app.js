@@ -11,6 +11,7 @@ const ExpressError = require('./utils/ExpressError');
 const Joi = require('joi');
 const { campgroundSchema, reviewSchema } = require('./schemas');
 const Review = require('./models/review');
+const morgan = require('morgan');
 
 mongoose.connect('mongodb://localhost:27017/yelpCampDB', {
   useNewUrlParser: true,
@@ -27,6 +28,7 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
+app.use(morgan('tiny'));
 // Allows layouts to be used
 app.engine('ejs', ejsMate);
 
@@ -130,6 +132,16 @@ app.post('/campgrounds/:id/reviews', validateReview, catchAsync(async (req, res)
   await review.save();
   await campground.save();
   res.redirect(`/campgrounds/${campground._id}`)
+}))
+
+// Delete reviews for campgrounds
+app.delete('/campgrounds/:id/reviews/:reviewID', catchAsync(async (req, res) => {
+  // res.send('Delete Me!');
+  const { id, reviewID } = req.params;
+  // The $pull mongo operator removes from an array all instances of a value(s) that match a specified condition.
+  await CG_Yelpcamp.findByIdAndUpdate(id, { $pull: { reviews: reviewID } });
+  await Review.findByIdAndDelete(reviewID);
+  res.redirect(`/campgrounds/${id}`);
 }))
 
 // Will only run if nothing else above matches
