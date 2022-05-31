@@ -14,4 +14,9 @@ const campGroundSchema = new Schema({
     }
   ]
 });
+
+campGroundSchema.post('findOneAndDelete', async function () {
+  console.log("Deleted!")
+})
+
 module.exports = mongoose.model('CG_Yelpcamp', campGroundSchema);
