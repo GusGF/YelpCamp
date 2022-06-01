@@ -66,9 +66,11 @@ app.get('/campgrounds/new', (req, res) => {
 const validateCampground = (req, res, next) => {
   const { error } = campgroundSchema.validate(req.body);
   if (error) {
+    console.log('Error in validateCampground');
     const msg = error.details.map(elm => elm.message).join(', ');
     throw new ExpressError(msg, 400);
   } else {
+    console.log('Campground validated');
     next();
   }
 }
