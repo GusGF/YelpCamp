@@ -17,6 +17,7 @@ const campGroundSchema = new Schema({
 });
 
 // This trigger is fired when findByIdAndDelete in 'app.js' is used to delete a CG.
+// So beware if you delete CGs using 'remove' or 'deleteMany' this middleware won't be triggered 
 // So 'doc' is the object that's been deleted and is available to us so is passed in here
 campGroundSchema.post('findOneAndDelete', async function (doc) {
   // console.log("Deleted!")
