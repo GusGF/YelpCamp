@@ -3,7 +3,6 @@ const app = express();
 const cookieParser = require('cookie-parser');
 app.use(cookieParser('thisIsMySecret'));
 
-
 app.get('/greet', (req, res) => {
   // console.log(req.cookies);
   res.send("Press F12 and see all the cookies for this domain")
