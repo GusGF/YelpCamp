@@ -11,15 +11,26 @@ const session = require('express-session');
 // that data, and also protect the real session id value itself too. In the backend, 
 // we can use the session secret key to verify that a cookie is valid when a new request 
 // is sent to our backend, etc.
-app.use(session({ secret: 'thisisnotagoodsecret' }));
+app.use(session({ secret: 'thisisnotagoodsecret', resave: false, saveUninitialized: false}));
 
 app.get('/viewcount', (req, res) => {
   if (req.session.count)
     req.session.count += 1;
   else
     req.session.count = 1;
-  res.send(`You have viewed this page ${req.session.count} times`);
+  res.send(`You have viewed this page ${req.session.count} time(s)`);
 });
+
+app.get('/register', (req, res)=>{
+  const {username = 'Anonymous'} = req.query;
+  req.session.username = username;
+  res.redirect('/greet');
+})
+
+app.get('/greet', (req, res)=>{
+  const {username} = req.session;
+  res.send(`Hey ${username}`);
+})
 
 app.listen(4000, () => {
   console.log("Listening on 4000")
