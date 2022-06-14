@@ -3,8 +3,15 @@
 // (but we can indeed store it to the database as well, etc).
 const { request } = require('express');
 const express = require('express');
-const app = express();
+const cookieParser = require('cookie-parser');
 const session = require('express-session');
+// Flash messages are stored in the session. First enable cookieParser and session middleware. 
+// Then, use flash middleware provided by connect-flash.
+const flash = require('connect-flash');
+
+const app = express();
+
+app.use(cookieParser('thisIsMySecret'));
 // 'secret' is used to encrypt the session cookie so that you can be 
 // reasonably sure the cookie isn't a fake one. Cookies can also technically 
 // contain sensitive data, so hashing it using a secret key can be helpful to protect 
@@ -12,6 +19,7 @@ const session = require('express-session');
 // we can use the session secret key to verify that a cookie is valid when a new request 
 // is sent to our backend, etc.
 app.use(session({ secret: 'thisisnotagoodsecret', resave: false, saveUninitialized: false}));
+app.use(flash());
 
 app.get('/viewcount', (req, res) => {
   if (req.session.count)

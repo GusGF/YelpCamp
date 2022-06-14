@@ -2,7 +2,7 @@
 // Our JOI schema should match our Mongoose schema for the fields we want to check
 const Joi = require('Joi');
 
-const campgroundSchema = Joi.object({
+module.exports.campgroundSchema = Joi.object({
   campground: Joi.object({
     title: Joi.string().required(),
     price: Joi.number().required().min(0),
@@ -11,7 +11,6 @@ const campgroundSchema = Joi.object({
     description: Joi.string().required()
   }).required()
 });
-module.exports = campgroundSchema;
 
 module.exports.reviewSchema = Joi.object({
   review: Joi.object({
