@@ -22,8 +22,11 @@ app.use(session({ secret: 'thisisnotagoodsecret', resave: false, saveUninitializ
 // Flash messages are stored in the session. First enable cookieParser and 
 // session middleware. Then, use flash middleware provided by connect-flash.
 app.use(flash());
+// Here we set up a middleware to add on to the response object in such a way that in every single 
+// template and every view will have access to messages via res.locals
 app.use((req, res, next) => {
-
+  res.locals.messages = req.flash(success);
+  next();
 })
 
 mongoose.connect('mongodb://localhost:27017/yelpCampDB', {
@@ -67,11 +70,8 @@ app.get('/', (req, res) => {
 // Full list
 app.get('/campgrounds', async (req, res) => {
   const campgrounds = await CG_Yelpcamp.find({});
-  // // Set a flash message by passing the key, followed by the value, to req.flash()
-  // req.flash('success', "Successfully made a new farm");
-  // // Get an array ('messages') of flash messages by passing the key to req.flash()
-  res.render('campgrounds/index', { campgrounds, messages: req.flash('success') });
-  // redo res.render('campgrounds/index', { campgrounds });
+  // res.render('campgrounds/index', { campgrounds, messages: req.flash('success') });
+  res.render('campgrounds/index', { campgrounds });
 })
 
 // Display form for adding a new campground
@@ -81,9 +81,7 @@ app.get('/campgrounds/new', (req, res) => {
 
 // This uses the JOI validation schema in 'schemas'
 const validateCampground = (req, res, next) => {
-  console.log("-------------------------  1  ------------------------")
   const { error } = campgroundSchema.validate(req.body);
-  console.log("-------------------------  2  ------------------------")
   if (error) {
     console.log('Error in validateCampground');
     const msg = error.details.map(elm => elm.message).join(', ');
