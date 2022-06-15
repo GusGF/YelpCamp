@@ -48,6 +48,11 @@ app.use(morgan('tiny'));
 // Allows layouts to be used
 app.engine('ejs', ejsMate);
 
+
+const campgrounds = require('./routes/campgrounds');
+app.use('/campgrounds', campgrounds)
+
+
 // http://localhost:3001/campgrounds?password=pass
 // Middleware to check if a password exists in the HTML request e.g.
 // app.get('/campgrounds', verify, async (req, res) => {
@@ -67,17 +72,6 @@ app.get('/', (req, res) => {
   res.render('home');
 })
 
-// Full list
-app.get('/campgrounds', async (req, res) => {
-  const campgrounds = await CG_Yelpcamp.find({});
-  // res.render('campgrounds/index', { campgrounds, messages: req.flash('success') });
-  res.render('campgrounds/index', { campgrounds });
-})
-
-// Display form for adding a new campground
-app.get('/campgrounds/new', (req, res) => {
-  res.render('campgrounds/new');
-})
 
 // This uses the JOI validation schema in 'schemas'
 const validateCampground = (req, res, next) => {
@@ -106,45 +100,13 @@ const validateReview = (req, res, next) => {
 /////////////////////////////////////////////////
 // NOW FOLLOWS ALL THE HANDLERS FOR OUR ROUTES //
 /////////////////////////////////////////////////
-// Add a campground
-app.post('/campgrounds', validateCampground, catchAsync(async (req, res, next) => {
-  // if (!req.body.campground) throw new ExpressError('Invalid Campground Data', 400);
-  // We're using middleware to validate our data before we even attempt to save it with or involve Mongoose
-  const campground = new CG_Yelpcamp(req.body.campground);
-  await campground.save();
-  // Set a flash message by passing the key, followed by the value, to req.flash()
-  req.flash('success', 'Congrats you successfully made a farm');
-  //redo res.redirect(`/campgrounds/${campground._id}`);
-  res.redirect(`/campgrounds`);
-}))
 
-// Display a campground
-app.get('/campgrounds/:id', catchAsync(async (req, res) => {
-  const campGround = await CG_Yelpcamp.findById(req.params.id).populate('reviews');
-  console.log(campGround);
-  res.render('campgrounds/show', { campGround });
-}))
 
-// Display a campground to edit
-app.get('/campgrounds/:id/edit', catchAsync(async (req, res) => {
-  const campGround = await CG_Yelpcamp.findById(req.params.id)
-  res.render('campgrounds/edit', { campGround });
-}))
-
-// Update campground
-app.put('/campgrounds/:id', validateCampground, catchAsync(async (req, res) => {
-  const { id } = req.params;
-  console.log(`Updating a row for: ${id}`);
-  console.log(req.body);
-  const campground = await CG_Yelpcamp.findByIdAndUpdate(id, { ...req.body.campground });
-  res.redirect(`/campgrounds/${campground._id}`)
-}))
-
-app.delete('/campgrounds/:id', catchAsync(async (req, res) => {
-  const { id } = req.params;
-  const campground = await CG_Yelpcamp.findByIdAndDelete(id);
-  res.redirect('/campgrounds');
-}));
+// Will only run if nothing else above matches
+// the * represents a 'get', a 'post', etc. 
+app.all('*', (req, res, next) => {
+  next(new ExpressError('Page not found', 404));
+})
 
 // Add a campground review
 app.post('/campgrounds/:id/reviews', validateReview, catchAsync(async (req, res) => {
@@ -165,12 +127,6 @@ app.delete('/campgrounds/:id/reviews/:reviewID', catchAsync(async (req, res) => 
   await Review.findByIdAndDelete(reviewID);
   res.redirect(`/campgrounds/${id}`);
 }))
-
-// Will only run if nothing else above matches
-// the * represents a 'get', a 'post', etc. 
-app.all('*', (req, res, next) => {
-  next(new ExpressError('Page not found', 404));
-})
 
 app.use((err, req, res, next) => {
   console.log('**************************************');
