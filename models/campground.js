@@ -32,4 +32,4 @@ campGroundSchema.post('findOneAndDelete', async function (doc) {
   }
 })
 
-module.exports = mongoose.model('CG_Yelpcamp', campGroundSchema);
+module.exports = mongoose.model('Yelpcamp', campGroundSchema);

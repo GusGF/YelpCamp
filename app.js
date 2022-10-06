@@ -8,7 +8,7 @@ const ejsMate = require('ejs-mate');
 const AppError = require('./other/AppError');
 const catchAsync = require('./utils/catchAsync');
 const ExpressError = require('./utils/ExpressError');
-// const Joi = require('joi');
+const Joi = require('joi');
 const { campgroundSchema, reviewSchema } = require('./schemas');
 const Review = require('./models/review');
 const morgan = require('morgan');
@@ -19,17 +19,15 @@ const session = require('express-session');
 const flash = require('connect-flash');
 app.use(cookieParser('thisIsMySecret'));
 app.use(session({ secret: 'thisisnotagoodsecret', resave: false, saveUninitialized: false }));
-// Flash messages are stored in the session. First enable cookieParser and 
-// session middleware. Then, use flash middleware provided by connect-flash.
-app.use(flash());
-// Here we set up a middleware to add on to the response object in such a way that in every single 
-// template and every view will have access to messages via res.locals
-app.use((req, res, next) => {
-  res.locals.messages = req.flash(success);
-  next();
-})
+/* Flash messages are stored in the session. First enable cookieParser and session middleware. Then, use flash middleware provided by connect-flash. */
+// app.use(flash());
+/* Here we set up a middleware to add on to the response object in such a way that in every single template and every view will have access to messages via res.locals */
+// app.use((req, res, next) => {
+//   res.locals.messages = req.flash(success);
+//   next();
+// })
 
-mongoose.connect('mongodb://localhost:27017/yelpCampDB', {
+mongoose.connect('mongodb://127.0.0.1:27017/yelpCampDB', {
   useNewUrlParser: true,
   useUnifiedTopology: true
 });
@@ -72,20 +70,6 @@ app.get('/', (req, res) => {
   res.render('home');
 })
 
-
-// This uses the JOI validation schema in 'schemas'
-const validateCampground = (req, res, next) => {
-  const { error } = campgroundSchema.validate(req.body);
-  if (error) {
-    console.log('Error in validateCampground');
-    const msg = error.details.map(elm => elm.message).join(', ');
-    throw new ExpressError(msg, 400);
-  } else {
-    console.log('Campground validated');
-    next();
-  }
-}
-
 // This uses the JOI validation schema in 'schemas'
 const validateReview = (req, res, next) => {
   const { error } = reviewSchema.validate(req.body);
@@ -97,16 +81,6 @@ const validateReview = (req, res, next) => {
   }
 }
 
-/////////////////////////////////////////////////
-// NOW FOLLOWS ALL THE HANDLERS FOR OUR ROUTES //
-/////////////////////////////////////////////////
-
-
-// Will only run if nothing else above matches
-// the * represents a 'get', a 'post', etc. 
-app.all('*', (req, res, next) => {
-  next(new ExpressError('Page not found', 404));
-})
 
 // Add a campground review
 app.post('/campgrounds/:id/reviews', validateReview, catchAsync(async (req, res) => {
@@ -122,11 +96,17 @@ app.post('/campgrounds/:id/reviews', validateReview, catchAsync(async (req, res)
 app.delete('/campgrounds/:id/reviews/:reviewID', catchAsync(async (req, res) => {
   // res.send('Delete Me!');
   const { id, reviewID } = req.params;
-  // The $pull mongo operator removes from an array all instances of a value(s) that match a specified condition.
+  /* The $pull mongo operator removes from an array all instances of a value(s) that match a specified condition. */
   await CG_Yelpcamp.findByIdAndUpdate(id, { $pull: { reviews: reviewID } });
   await Review.findByIdAndDelete(reviewID);
   res.redirect(`/campgrounds/${id}`);
 }))
+
+// Will only run if nothing else above matches
+// the * represents a 'get', a 'post', etc. 
+app.all('*', (req, res, next) => {
+  next(new ExpressError('Page not found', 404));
+})
 
 app.use((err, req, res, next) => {
   console.log('**************************************');
@@ -137,6 +117,6 @@ app.use((err, req, res, next) => {
   res.status(statusCode).render('error', { err });
 })
 
-app.listen(3001, () => {
-  console.log('Serving on port 3001')
+app.listen(3002, () => {
+  console.log('Serving on port 3002')
 });

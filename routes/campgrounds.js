@@ -1,41 +1,59 @@
 const express = require('express');
 const router = express.Router();
+const Joi = require('joi');
+const { campgroundSchema } = require('../schemas');
+const catchAsync = require('../utils/catchAsync');
+const ExpressError = require('../utils/ExpressError');
+const Yelpcamp = require('../models/campground');
+const ObjectID = require('mongoose').Types.ObjectId;
 
+// This uses the JOI validation schema in 'schemas'
+const validateCampground = (req, res, next) => {
+  const { error } = campgroundSchema.validate(req.body);
+  if (error) {
+    console.log('Error in validateCampground');
+    const msg = error.details.map(elm => elm.message).join(', ');
+    throw new ExpressError(msg, 400);
+  } else {
+    console.log('Campground validated');
+    next();
+  }
+}
 
 // Full list
-router.get('/campgrounds', async (req, res) => {
-  const campgrounds = await CG_Yelpcamp.find({});
+router.get('/', async (req, res) => {
+  const campgrounds = await Yelpcamp.find({});
   // res.render('campgrounds/index', { campgrounds, messages: req.flash('success') });
   res.render('campgrounds/index', { campgrounds });
 })
 
 // Display form for adding a new campground
-router.get('/campgrounds/new', (req, res) => {
+router.get('/new', (req, res) => {
   res.render('campgrounds/new');
 })
 
 // Add a campground
-router.post('/campgrounds', validateCampground, catchAsync(async (req, res, next) => {
+router.post('/', validateCampground, catchAsync(async (req, res, next) => {
   // if (!req.body.campground) throw new ExpressError('Invalid Campground Data', 400);
   // We're using middleware to validate our data before we even attempt to save it with or involve Mongoose
-  const campground = new CG_Yelpcamp(req.body.campground);
+  const campground = new Yelpcamp(req.body.campground);
   await campground.save();
-  // Set a flash message by passing the key, followed by the value, to req.flash()
-  req.flash('success', 'Congrats you successfully made a farm');
+  // // Set a flash message by passing the key, followed by the value, to req.flash()
+  // req.flash('success', 'Congrats you successfully made a campground');
   //redo res.redirect(`/campgrounds/${campground._id}`);
-  res.redirect(`/campgrounds`);
+  res.redirect(`/campgrounds/`);
 }))
 
 // Display a campground
-router.get('/campgrounds/:id', catchAsync(async (req, res) => {
-  const campGround = await CG_Yelpcamp.findById(req.params.id).populate('reviews');
+router.get('/:id', catchAsync(async (req, res) => {
+  const campGround = await Yelpcamp.findById(req.params.id).populate('reviews');
   console.log(campGround);
   res.render('campgrounds/show', { campGround });
 }))
 
 // Display a campground to edit
-router.get('/campgrounds/:id/edit', catchAsync(async (req, res) => {
-  const campGround = await CG_Yelpcamp.findById(req.params.id)
+router.get('/:id/edit', catchAsync(async (req, res) => {
+  const campGround = await Yelpcamp.findById(req.params.id)
   res.render('campgrounds/edit', { campGround });
 }))
 
@@ -44,14 +62,14 @@ router.put('/campgrounds/:id', validateCampground, catchAsync(async (req, res) =
   const { id } = req.params;
   console.log(`Updating a row for: ${id}`);
   console.log(req.body);
-  const campground = await CG_Yelpcamp.findByIdAndUpdate(id, { ...req.body.campground });
-  res.redirect(`/campgrounds/${campground._id}`)
+  const campground = await Yelpcamp.findByIdAndUpdate(id, { ...req.body.campground });
+  res.redirect(`/${campground._id}`)
 }))
 
 router.delete('/campgrounds/:id', catchAsync(async (req, res) => {
   const { id } = req.params;
-  const campground = await CG_Yelpcamp.findByIdAndDelete(id);
-  res.redirect('/campgrounds');
+  const campground = await Yelpcamp.findByIdAndDelete(id);
+  res.redirect('/');
 }));
 
 module.exports = router;

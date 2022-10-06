@@ -9,14 +9,14 @@ const campGroundSch = new mongoose.Schema({
 });
 // Model for interacting with our DB
 // #################################################################################
-const CG_YelpCamp = mongoose.model('CG_YelpCamp', campGroundSch);
+const YelpCamp = mongoose.model('YelpCamp', campGroundSch);
 
 // Data imports
 const cities = require('./cities');
 const { descriptors, places } = require('./seedHelpers');
 // Connect and create if necessary to our DB 
 // #################################################################################
-mongoose.connect('mongodb://localhost:27017/yelpCampDB', {
+mongoose.connect('mongodb://127.0.0.1:27017/yelpCampDB', {
   useNewUrlParser: true,
   useUnifiedTopology: true
 });
@@ -36,7 +36,7 @@ const dropDB = async () => {
 const dropCollection = async () => {
   try {
     // #################################################################################
-    await db.dropCollection('CG_YelpCamp');
+    await db.dropCollection('YelpCamp');
     console.log("Collection dropped?!");
   } catch (e) {
     console.log("Collection NOT dropped or it didn't exit?!");
@@ -61,7 +61,7 @@ const seedDB = async () => {
     // Getting a random price
     let rndPrice = Math.floor(Math.random() * 20);
     // #################################################################################
-    myCampGround = new CG_YelpCamp({
+    myCampGround = new YelpCamp({
       title: title,
       location: location,
       description: "This is a great place to camp!!",
