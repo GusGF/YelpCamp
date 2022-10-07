@@ -49,6 +49,11 @@ app.engine('ejs', ejsMate);
 
 const campgrounds = require('./routes/campgrounds');
 app.use('/campgrounds', campgrounds)
+const reviews = require('./routes/reviews');
+/* express.Router() likes to keep params separate so the upshot of this is in the reviews route file the ':id' below, won't be passed in!! Routers actually get separate params but we can actually specify an option in the reviews routes file:
+const router = express.Router({ mergeParams: true });
+Now all of the params from here are also merged with the params in the reviews route file. */
+app.use('/campgrounds/:id/reviews', reviews)
 
 
 // http://localhost:3001/campgrounds?password=pass
@@ -69,38 +74,6 @@ const verify = ((req, res, next) => {
 app.get('/', (req, res) => {
   res.render('home');
 })
-
-// This uses the JOI validation schema in 'schemas'
-const validateReview = (req, res, next) => {
-  const { error } = reviewSchema.validate(req.body);
-  if (error) {
-    const msg = error.details.map(elm => elm.message).join(', ');
-    throw new ExpressError(msg, 400);
-  } else {
-    next();
-  }
-}
-
-
-// Add a campground review
-app.post('/campgrounds/:id/reviews', validateReview, catchAsync(async (req, res) => {
-  const campground = await CG_Yelpcamp.findById(req.params.id);
-  const review = new Review(req.body.review);
-  campground.reviews.push(review);
-  await review.save();
-  await campground.save();
-  res.redirect(`/campgrounds/${campground._id}`)
-}))
-
-// Delete reviews for campgrounds
-app.delete('/campgrounds/:id/reviews/:reviewID', catchAsync(async (req, res) => {
-  // res.send('Delete Me!');
-  const { id, reviewID } = req.params;
-  /* The $pull mongo operator removes from an array all instances of a value(s) that match a specified condition. */
-  await CG_Yelpcamp.findByIdAndUpdate(id, { $pull: { reviews: reviewID } });
-  await Review.findByIdAndDelete(reviewID);
-  res.redirect(`/campgrounds/${id}`);
-}))
 
 // Will only run if nothing else above matches
 // the * represents a 'get', a 'post', etc. 
