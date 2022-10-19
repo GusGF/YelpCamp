@@ -58,7 +58,8 @@ router.get('/:id/edit', catchAsync(async (req, res) => {
 }))
 
 // Update campground
-router.put('/campgrounds/:id', validateCampground, catchAsync(async (req, res) => {
+router.put('/:id', validateCampground, catchAsync(async (req, res) => {
+  console.log("Updating campground")
   const { id } = req.params;
   console.log(`Updating a row for: ${id}`);
   console.log(req.body);
@@ -73,3 +74,6 @@ router.delete('/campgrounds/:id', catchAsync(async (req, res) => {
 }));
 
 module.exports = router;
+
+
+

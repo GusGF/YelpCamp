@@ -12,13 +12,16 @@ const Joi = require('joi');
 const { campgroundSchema, reviewSchema } = require('./schemas');
 const Review = require('./models/review');
 const morgan = require('morgan');
-
-
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const flash = require('connect-flash');
+
 app.use(cookieParser('thisIsMySecret'));
-app.use(session({ secret: 'thisisnotagoodsecret', resave: false, saveUninitialized: false }));
+app.use(session({
+  secret: 'thisisnotagoodsecret',
+  resave: false,
+  saveUninitialized: true
+}));
 /* Flash messages are stored in the session. First enable cookieParser and session middleware. Then, use flash middleware provided by connect-flash. */
 // app.use(flash());
 /* Here we set up a middleware to add on to the response object in such a way that in every single template and every view will have access to messages via res.locals */
@@ -46,14 +49,17 @@ app.use(morgan('tiny'));
 // Allows layouts to be used
 app.engine('ejs', ejsMate);
 
-
-const campgrounds = require('./routes/campgrounds');
-app.use('/campgrounds', campgrounds)
-const reviews = require('./routes/reviews');
 /* express.Router() likes to keep params separate so the upshot of this is in the reviews route file the ':id' below, won't be passed in!! Routers actually get separate params but we can actually specify an option in the reviews routes file:
 const router = express.Router({ mergeParams: true });
 Now all of the params from here are also merged with the params in the reviews route file. */
+const campgrounds = require('./routes/campgrounds');
+app.use('/campgrounds', campgrounds)
+const reviews = require('./routes/reviews');
 app.use('/campgrounds/:id/reviews', reviews)
+
+/* We are telling express to serve our public directory which contains static assets so that we could have images, custom style sheets and scripts */
+// app.use(express.static('public'))
+app.use(express.static(path.join(__dirname, 'public')))
 
 
 // http://localhost:3001/campgrounds?password=pass
