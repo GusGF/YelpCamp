@@ -16,6 +16,7 @@ const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const flash = require('connect-flash');
 
+
 app.use(cookieParser('thisIsMySecret'));
 app.use(session({
   secret: 'thisisnotagoodsecret',
