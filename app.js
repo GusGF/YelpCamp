@@ -16,12 +16,16 @@ const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const flash = require('connect-flash');
 
-
 app.use(cookieParser('thisIsMySecret'));
 app.use(session({
   secret: 'thisisnotagoodsecret',
   resave: false,
-  saveUninitialized: true
+  saveUninitialized: true,
+  cookie: {
+    httpOnly: true,
+    expires: Date.now() + (1000 * 60 * 60 * 24 * 7),
+    maxAge: (1000 * 60 * 60 * 24 * 7)
+  }
 }));
 /* Flash messages are stored in the session. First enable cookieParser and session middleware. Then, use flash middleware provided by connect-flash. */
 // app.use(flash());
