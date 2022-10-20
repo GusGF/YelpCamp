@@ -27,13 +27,14 @@ app.use(session({
     maxAge: (1000 * 60 * 60 * 24 * 7)
   }
 }));
-/* Flash messages are stored in the session. First enable cookieParser and session middleware. Then, use flash middleware provided by connect-flash. */
-// app.use(flash());
+/* Flash messages are stored in the session. First enable cookieParser and session middleware above. Then, use flash middleware provided by connect-flash for all routes. */
+app.use(flash());
 /* Here we set up a middleware to add on to the response object in such a way that in every single template and every view will have access to messages via res.locals */
-// app.use((req, res, next) => {
-//   res.locals.messages = req.flash(success);
-//   next();
-// })
+app.use((req, res, next) => {
+  res.locals.success = req.flash('success');
+  res.locals.error = req.flash('error');
+  next();
+})
 
 mongoose.connect('mongodb://127.0.0.1:27017/yelpCampDB', {
   useNewUrlParser: true,

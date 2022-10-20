@@ -4,7 +4,7 @@
     <div class="col-6 offset-3">
       <!-- The novalidate boolean attribute added to your <form> disables the browser default feedback tooltips, 
       but still provides access to the form validation APIs in JavaScript. Essentially tells the brower to not do the validations -->
-      <form action="/campgrounds" method="post" novalidate class="validated-form">
+      <form action="/campgrounds/" method="post" novalidate class="validated-form">
         <div class="mb-3">
           <label class="form-label" for="title">Title</label>
           <input class="form-control" type="text" id="title" name="campground[title]" required>
@@ -33,6 +33,6 @@
         </div>
         <button class="btn btn-success mb-3">Add Campground</button>
       </form>
-      <a href="/campgrounds">All Campgrounds</a>
+      <a href="/campgrounds/">All Campgrounds</a>
     </div>
   </div>

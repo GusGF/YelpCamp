@@ -34,20 +34,23 @@ router.get('/new', (req, res) => {
 
 // Add a campground
 router.post('/', validateCampground, catchAsync(async (req, res, next) => {
+  console.log('In add a campground')
   // if (!req.body.campground) throw new ExpressError('Invalid Campground Data', 400);
-  // We're using middleware to validate our data before we even attempt to save it with or involve Mongoose
+  /* We're using middleware to validate our data before we even attempt to save it with or involve Mongoose */
   const campground = new Yelpcamp(req.body.campground);
   await campground.save();
-  // // Set a flash message by passing the key, followed by the value, to req.flash()
-  // req.flash('success', 'Congrats you successfully made a campground');
+  // Set a flash message by passing the key, followed by the value, to req.flash()
+  req.flash('success', 'Congrats you successfully made a campground');
   //redo res.redirect(`/campgrounds/${campground._id}`);
-  res.redirect(`/campgrounds/`);
+  res.redirect(`/campgrounds/${campground._id}`);
 }))
 
 // Display a campground
 router.get('/:id', catchAsync(async (req, res) => {
   const campGround = await Yelpcamp.findById(req.params.id).populate('reviews');
   console.log(campGround);
+  // // Passing our request property flash
+  // res.render('campgrounds/show', { campGround, msg: req.flash('success') });
   res.render('campgrounds/show', { campGround });
 }))
 
@@ -67,10 +70,10 @@ router.put('/:id', validateCampground, catchAsync(async (req, res) => {
   res.redirect(`/${campground._id}`)
 }))
 
-router.delete('/campgrounds/:id', catchAsync(async (req, res) => {
+router.delete('/:id', catchAsync(async (req, res) => {
   const { id } = req.params;
   const campground = await Yelpcamp.findByIdAndDelete(id);
-  res.redirect('/');
+  res.redirect('/campgrounds/');
 }));
 
 module.exports = router;
