@@ -29,8 +29,12 @@ app.use(session({
 }));
 /* Flash messages are stored in the session. First enable cookieParser and session middleware above. Then, use flash middleware provided by connect-flash for all routes. */
 app.use(flash());
-/* Here we set up a middleware to add on to the response object in such a way that in every single template and every view will have access to messages via res.locals */
+/* We use this middleware to pass the flash keys (arrays) we initialised in the req object (in our respective route handlers) to res.locals so that we can access those messages when we are rendering the HTML in our views. */
 app.use((req, res, next) => {
+  //// BEWARE If you enable the logs below the flash msgs will not display!!
+  // console.log("In the flash middleware")
+  // console.log(req.flash('success'))
+  // initialise our very own res.locals variables
   res.locals.success = req.flash('success');
   res.locals.error = req.flash('error');
   next();

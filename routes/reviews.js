@@ -28,6 +28,7 @@ router.post('/', validateReview, catchAsync(async (req, res) => {
   campground.reviews.push(review);
   await review.save();
   await campground.save();
+  req.flash('success', 'Success, review created');
   res.redirect(`/campgrounds/${campground._id}`)
 }))
 
@@ -38,6 +39,7 @@ router.delete('/:reviewID', catchAsync(async (req, res) => {
   /* The $pull mongo operator removes from an array all instances of a value(s) that match a specified condition. */
   await Yelpcamp.findByIdAndUpdate(id, { $pull: { reviews: reviewID } });
   await Review.findByIdAndDelete(reviewID);
+  req.flash('success', 'Review deleted');
   res.redirect(`/campgrounds/${id}`);
 }))
 

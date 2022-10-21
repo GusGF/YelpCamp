@@ -39,9 +39,10 @@ router.post('/', validateCampground, catchAsync(async (req, res, next) => {
   /* We're using middleware to validate our data before we even attempt to save it with or involve Mongoose */
   const campground = new Yelpcamp(req.body.campground);
   await campground.save();
-  // Set a flash message by passing the key, followed by the value, to req.flash()
+  // Set a flash message by passing the key (an array), followed by the value, to req.flash()
   req.flash('success', 'Congrats you successfully made a campground');
-  //redo res.redirect(`/campgrounds/${campground._id}`);
+  // req.flash('success', 'Congrats AGAIN you successfully made a campground');
+  // redo res.redirect(`/campgrounds/${campground._id}`);
   res.redirect(`/campgrounds/${campground._id}`);
 }))
 
@@ -67,12 +68,14 @@ router.put('/:id', validateCampground, catchAsync(async (req, res) => {
   console.log(`Updating a row for: ${id}`);
   console.log(req.body);
   const campground = await Yelpcamp.findByIdAndUpdate(id, { ...req.body.campground });
-  res.redirect(`/${campground._id}`)
+  req.flash('success', 'Successfully updated campground');
+  res.redirect(`/campgrounds/${campground._id}`)
 }))
 
 router.delete('/:id', catchAsync(async (req, res) => {
   const { id } = req.params;
   const campground = await Yelpcamp.findByIdAndDelete(id);
+  req.flash('success', 'Campground deleted');
   res.redirect('/campgrounds/');
 }));
 

@@ -1,0 +1,7 @@
+<!-- Using role="alert" is for announcing it with screen readers -->
+<% if(success.length>0) { %>
+  <div class="alert alert-warning alert-dismissible fade show" role="alert">
+    <%= success %>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  <% } %>
