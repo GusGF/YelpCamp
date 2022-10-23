@@ -49,6 +49,11 @@ router.post('/', validateCampground, catchAsync(async (req, res, next) => {
 // Display a campground
 router.get('/:id', catchAsync(async (req, res) => {
   const campGround = await Yelpcamp.findById(req.params.id).populate('reviews');
+  if (!campGround) {
+    req.flash('error', 'Cannot find that campground')
+    // if we don't use return execution will continue within this execution context
+    return res.redirect('/campgrounds/')
+  }
   console.log(campGround);
   // // Passing our request property flash
   // res.render('campgrounds/show', { campGround, msg: req.flash('success') });
