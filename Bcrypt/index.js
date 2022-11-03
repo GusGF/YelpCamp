@@ -18,4 +18,4 @@ const login = async (pwd, hashedPW) => {
     console.log("Not matched")
 }
 
-login('monkey1', '$2b$10$F4kVQVQ7vEpTC/sxVZkkjec0AXleuVDFNJkZrRBlV0ojbHofIcIbK')
+login('monkey', '$2b$10$F4kVQVQ7vEpTC/sxVZkkjec0AXleuVDFNJkZrRBlV0ojbHofIcIbK')
