@@ -43,6 +43,22 @@ app.post('/register', async (req, res) => {
   res.redirect('/')
 })
 
+app.get('/login', (req, res) => {
+  res.render('login')
+})
+
+app.post('/login', async (req, res) => {
+  const { username, password } = req.body
+  const theUser = await User.findOne({ username: username })
+  // console.log(theUser)
+  const validPassword = await bcrypt.compare(password, theUser.password)
+  // console.log(validPassword)
+  if (validPassword)
+    res.send("Match!!")
+  else
+    res.send("Fail!")
+})
+
 app.listen(3001, () => {
   console.log('Serving your app 3001')
 })
